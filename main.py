@@ -14,45 +14,52 @@ NUM_BARCOS: int = 10
 # declarando tablero en términos de N
 tablero: list[list[bool]] = [[False for _ in range(N)] for _ in range(N)]
 tablero_disparados: list[list[bool]] = [[False for _ in range(N)] for _ in range(N)]
+barcos: list[list[int]] =  [] 
+# barcos[x][0] es tamaño, barcos[x][1] es sentido, barcos[x][2] x inicial, barcos[x][3] es y inicial
 
 # generación aleatoria de barcos
 for i in range(NUM_BARCOS):
-    x: int = rand.randint(0, N-1)
-    y: int = rand.randint(0, N-1)
-    tablero[x][y] = True
-
-# for i in tablero:
-#     print(i)
-
-
-for i in range(NUM_DISPAROS): # iterando sobre cada disparo posible
-    coords: str = input("Ingresar coordenadas para disparar (en formato 'x y').\n") # Ingreso de coords del jugador
-    if (len(coords) != 3): # viendo que tenga el tamaño correcto https://www.w3schools.com/python/gloss_python_string_length.asp
-        print("Input inválido.")
-        continue
-
-    coords_separadas: list[int] = coords.split()
-
-    x: int = int(coords_separadas[0])
-    y: int = int(coords_separadas[1])
-
-    # el input se splittea y luego se usa esa lista para asignar valores a x & y
-    #https://www.w3schools.com/python/ref_string_split.asp
-
-    if (type(x) != int or type(y) != int or x >= N or y >= N): # checkeando que ambos sean ints y estén en el tablero
-        print("Input inválido.")
-        continue
-
-    if (tablero[x][y] == True): # Hay un barco en esas coords
-        tablero[x][y] = False # ya no está más en pie
-        tablero_disparados[x][y] = True
-        disparos_acertados += 1
-        print("El disparo acertó a uno de los barcos.")
+    size: int = rand.randint(1, 3)
+    x: int = rand.randint(0, N-size)
+    y: int = rand.randint(0, N-size)
+    sentido: int = rand.randint(0, 1) # 0 significa horizontal, 1 significa vertical
+    barcos.append([size, sentido, x, y])
+    if (sentido == 0): 
+        for j in range(size):
+            tablero[x][y+j] = True
     else:
-        print("El disparo no acertó.")
+        for j in range(size):
+            tablero[x+j][y] = True
 
-print(f"\nJuego finalizado. Se acertaron {disparos_acertados} tiros y se fallaron {NUM_DISPAROS - disparos_acertados}.")
-print("\nTablero final (0 para vacío, b para barco y h para hundido): ")
+print(barcos)
+# for i in range(NUM_DISPAROS): # iterando sobre cada disparo posible
+#     coords: str = input("Ingresar coordenadas para disparar (en formato 'x y').\n") # Ingreso de coords del jugador
+#     if (len(coords) != 3): # viendo que tenga el tamaño correcto https://www.w3schools.com/python/gloss_python_string_length.asp
+#         print("Input inválido.")
+#         continue
+
+#     coords_separadas: list[int] = coords.split()
+
+#     x: int = int(coords_separadas[0])
+#     y: int = int(coords_separadas[1])
+
+#     # el input se splittea y luego se usa esa lista para asignar valores a x & y
+#     #https://www.w3schools.com/python/ref_string_split.asp
+
+#     if (type(x) != int or type(y) != int or x >= N or y >= N): # checkeando que ambos sean ints y estén en el tablero
+#         print("Input inválido.")
+#         continue
+
+#     if (tablero[x][y] == True): # Hay un barco en esas coords
+#         tablero[x][y] = False # ya no está más en pie
+#         tablero_disparados[x][y] = True
+#         disparos_acertados += 1
+#         print("El disparo acertó a uno de los barcos.")
+#     else:
+#         print("El disparo no acertó.")
+
+# print(f"\nJuego finalizado. Se acertaron {disparos_acertados} tiros y se fallaron {NUM_DISPAROS - disparos_acertados}.")
+# print("\nTablero final (0 para vacío, b para barco y h para hundido): ")
 
 for i in range(N): # iterando a través de las filas del tablero
 
